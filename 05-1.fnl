@@ -21,7 +21,7 @@
 (λ apply-map-to-seed [map seed]
   (each [_ [dest source range] (ipairs map)]
     (if (and (>= seed source)
-             (<= seed (+ source range)))
+             (< seed (+ source range)))
       (let [_next (+ seed (- dest source))]
         (lua "return _next" ))))
   seed)
