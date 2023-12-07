@@ -29,9 +29,14 @@
       v
       (fun acc v))))
 
+(λ copy [t]
+   (collect [k v (pairs t)]
+     k v))
+
 {: map
  : match-numbers
  : read-lines
  : sum
  : zip
- : reduce}
+ : reduce
+ : copy}
