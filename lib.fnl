@@ -11,7 +11,7 @@
     [item (. other i)]))
 
 (λ match-numbers [line]
-  (->> [(re.match line "({[0-9]+} / .)+")]
+  (->> [(re.match line "({'-'?[0-9]+} / .)+")]
        (map tonumber)))
 
 (λ read-lines []
