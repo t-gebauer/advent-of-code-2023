@@ -33,10 +33,21 @@
    (collect [k v (pairs t)]
      k v))
 
+(λ endless [list]
+  "An iterator endlessly returning the next element from a list."
+  (local l (# list))
+  (var i 0)
+  (λ []
+    (set i (if (= i l)
+             1
+             (+ i 1)))
+    (. list i)))
+
 {: map
  : match-numbers
  : read-lines
  : sum
  : zip
  : reduce
- : copy}
+ : copy
+ : endless}
