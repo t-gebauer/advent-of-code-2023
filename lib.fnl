@@ -18,6 +18,9 @@
   (icollect [line (io.lines)]
     line))
 
+(λ chars [line]
+  (re.match line "{|{.}+|}"))
+
 (λ sum [list]
   (accumulate [sum 0 _ n (ipairs list)]
     (+ sum n)))
@@ -60,6 +63,12 @@
       (lua "return false")))
   true)
 
+(λ any [pred list]
+  (each [_ node (pairs list)]
+    (if (pred node)
+      (lua "return true")))
+  false)
+
 (λ printv [& args]
   "Warning: stops at nil!"
   (print (unpack (map fennel.view args))))
@@ -87,6 +96,7 @@
 {: map
  : match-numbers
  : read-lines
+ : chars
  : sum
  : zip
  : reduce
@@ -94,6 +104,7 @@
  : endless
  : endless-i
  : all
+ : any
  : printv
  : tset-nested
  : gcd
