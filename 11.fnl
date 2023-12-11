@@ -2,6 +2,8 @@
 (local grid2d (require :grid2d))
 (local V (require :vec2))
 
+(local is-part-1 (= :1 (or (. arg 1) :1)))
+
 (λ dist [a b]
   (let [[dx dy] (V.sub b a)]
     (+ (math.abs dx)
@@ -29,18 +31,20 @@
                  (map chars))
       grid (grid2d lines)
       stars (grid:find-all :#)
-      (empty-columns empty-rows) (find-empty-spaces grid stars)]
+      (empty-columns empty-rows) (find-empty-spaces grid stars)
+      space-size (if is-part-1 2 1_000_000)
+      space-size (- space-size 1)]
 
     (λ space-adjust [[ax ay] [bx by]]
       (var [x y] [bx by])
       (each [_ col (ipairs empty-columns)]
         (if
-          (< ax col bx) (set x (+ x 1))
-          (< bx col ax) (set x (- x 1))))
+          (< ax col bx) (set x (+ x space-size))
+          (< bx col ax) (set x (- x space-size))))
       (each [_ row (ipairs empty-rows)]
         (if
-          (< ay row by) (set y (+ y 1))
-          (< by row ay) (set y (- y 1))))
+          (< ay row by) (set y (+ y space-size))
+          (< by row ay) (set y (- y space-size))))
       [x y])
 
     (var sum 0)
