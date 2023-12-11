@@ -22,9 +22,9 @@
       (tset cols sx false)
       (tset rows sy false))
     (let [cols (icollect [i v (ipairs cols)]
-                          (if v i))
+                 (if v i))
           rows (icollect [i v (ipairs rows)]
-                       (if v i))]
+                 (if v i))]
       (values cols rows))))
 
 (let [lines (->> (read-lines)
@@ -35,23 +35,23 @@
       space-size (if is-part-1 2 1_000_000)
       space-size (- space-size 1)]
 
-    (λ space-adjust [[ax ay] [bx by]]
-      (var [x y] [bx by])
-      (each [_ col (ipairs empty-columns)]
-        (if
-          (< ax col bx) (set x (+ x space-size))
-          (< bx col ax) (set x (- x space-size))))
-      (each [_ row (ipairs empty-rows)]
-        (if
-          (< ay row by) (set y (+ y space-size))
-          (< by row ay) (set y (- y space-size))))
-      [x y])
+  (λ space-adjust [[ax ay] [bx by]]
+    (var [x y] [bx by])
+    (each [_ col (ipairs empty-columns)]
+      (if
+        (< ax col bx) (set x (+ x space-size))
+        (< bx col ax) (set x (- x space-size))))
+    (each [_ row (ipairs empty-rows)]
+      (if
+        (< ay row by) (set y (+ y space-size))
+        (< by row ay) (set y (- y space-size))))
+    [x y])
 
-    (var sum 0)
-    (for [i 1 (- (# stars) 1)]
-      (for [j (+ i 1) (# stars)]
-        (let [a (. stars i)
-              b (. stars j)
-              c (space-adjust a b)]
-          (set sum (+ sum (dist a c))))))
-    (printv sum))
+  (var sum 0)
+  (for [i 1 (- (# stars) 1)]
+    (for [j (+ i 1) (# stars)]
+      (let [a (. stars i)
+            b (. stars j)
+            c (space-adjust a b)]
+        (set sum (+ sum (dist a c))))))
+  (printv sum))
