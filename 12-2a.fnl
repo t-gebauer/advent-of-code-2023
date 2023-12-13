@@ -1,5 +1,6 @@
 ;;; Better than brute-force, fast enough for the part2 example, but still too slow
 ;;; for some of the unfolded inputs.
+;;; Update: Made it fast, by simply caching the calls to count-matches...
 
 (local {: read-lines : map : printv : sum} (require :lib))
 (local re (require :re))
@@ -35,40 +36,45 @@
       (case (. springs i)
         :# (set last-block i)))
 
-    (λ count-matches [start numbers]
-      (let [num (. numbers 1)
-            remaining (icollect [i n (ipairs numbers)]
-                        (if (> i 1) n))
-            min-further-space (accumulate [sum -1
-                                           _ n (ipairs numbers)]
-                                (+ sum 1 n))]
-        (var count 0)
-        (var first-block nil)
-        (for [i start (- (# springs) min-further-space)
-              &until (and (not= nil first-block)
-                          (> i (+ first-block 0)))]
-          (var matching true)
-          (if (= :# (. springs (- i 1)))
-            (set matching false)
-            (= :# (. springs (+ i num)))
-            (set matching false))
-          (for [j i (+ i num -1) &until (and (not matching)
-                                             (not= nil first-block))]
-            (if (= :. (. springs j))
-              (set matching false))
-            (if (and (= :# (. springs j))
-                     (= nil first-block))
-              (set first-block j)))
-          (if matching
-            (do
-              (set count (+ count (if (> (# remaining) 0)
-                                    (count-matches (+ i num 1) remaining)
-                                    (if (> (+ i num) last-block)
-                                      1
-                                      0)))))))
-        count))
+    (local already-counted {})
 
-    (let [res (count-matches 2 numbers)]
+    (λ count-matches [start num-index]
+      (local cache-key (.. (tostring start) "-" (tostring num-index)))
+      (case (. already-counted cache-key)
+        count count
+        nil
+        (let [num (. numbers num-index)
+              min-further-space (faccumulate [sum -1
+                                              i num-index (# numbers)]
+                                  (+ sum 1 (. numbers i)))]
+          (var count 0)
+          (var first-block nil)
+          (for [i start (- (# springs) min-further-space)
+                &until (and (not= nil first-block)
+                            (> i (+ first-block 0)))]
+            (var matching true)
+            (if (= :# (. springs (- i 1)))
+              (set matching false)
+              (= :# (. springs (+ i num)))
+              (set matching false))
+            (for [j i (+ i num -1) &until (and (not matching)
+                                               (not= nil first-block))]
+              (if (= :. (. springs j))
+                (set matching false))
+              (if (and (= :# (. springs j))
+                       (= nil first-block))
+                (set first-block j)))
+            (if matching
+              (do
+                (set count (+ count (if (< num-index (# numbers))
+                                      (count-matches (+ i num 1) (+ num-index 1))
+                                      (if (> (+ i num) last-block)
+                                        1
+                                        0)))))))
+          (tset already-counted cache-key count)
+          count)))
+
+    (let [res (count-matches 2 1)]
       (print res)
       res)))
 
