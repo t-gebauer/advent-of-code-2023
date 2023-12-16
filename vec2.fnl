@@ -13,11 +13,19 @@
 (λ zero? [[ax ay]]
   (= ax ay 0))
 
-{: add
- : sub
- : equal?
- : zero?
- :north [0 -1]
- :south [0 1]
- :east [1 0]
- :west [-1 0]}
+(let [north [0 -1]
+      south [0 1]
+      east [1 0]
+      west [-1 0]]
+  {: add
+   : sub
+   : equal?
+   : zero?
+   : north
+   : south
+   : east
+   : west
+   :up north
+   :down south
+   :left west
+   :right east})
