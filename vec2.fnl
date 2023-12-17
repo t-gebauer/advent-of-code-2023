@@ -13,6 +13,16 @@
 (λ zero? [[ax ay]]
   (= ax ay 0))
 
+(λ turn-left [[x y]]
+  [y (- x)])
+
+(λ turn-right [[x y]]
+  [(- y) x])
+
+(λ abs [[x y]]
+  (+ (math.abs x)
+     (math.abs y)))
+
 (let [north [0 -1]
       south [0 1]
       east [1 0]
@@ -28,4 +38,7 @@
    :up north
    :down south
    :left west
-   :right east})
+   :right east
+   : turn-left
+   : turn-right
+   : abs})
