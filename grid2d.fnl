@@ -9,6 +9,22 @@
   (case (. self.data y)
     line (tset line x value)))
 
+(λ Grid.force-set [self [x y] value]
+  (case (. self.data y)
+    line (tset line x value)
+    nil (let [new []]
+          (tset new x value)
+          (tset self.data y new)
+          (if (> x self.width)
+            (set self.width x))
+          (if (> y self.height)
+            (set self.height y))
+          (if (< x 1)
+            (set self.negx x))
+          (if (< y 1)
+            (set self.negy y))
+          (set self.size [self.width self.height]))))
+
 (λ Grid.find-one* [self pred]
   (for [y 1 self.height]
     (for [x 1 self.width]
@@ -34,6 +50,13 @@
 (λ Grid.print [self]
   (each [_ line (ipairs self.data)]
     (print (table.concat line))))
+
+(λ Grid.print-size [self ?size]
+  (let [[w h] (or ?size self.size)]
+    (for [y 1 h]
+      (print (faccumulate [line ""
+                           x 1 w]
+               (.. line (or (self:get [x y]) ".")))))))
 
 (λ Grid.make [tbl]
   (let [height (# tbl)

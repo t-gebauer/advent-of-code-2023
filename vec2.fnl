@@ -6,6 +6,10 @@
   [(- ax bx)
    (- ay by)])
 
+(λ mul [[x y] s]
+  [(* s x)
+   (* s y)])
+
 (λ equal? [[ax ay] [bx by]]
   (and (= ax bx)
        (= ay by)))
@@ -29,6 +33,7 @@
       west [-1 0]]
   {: add
    : sub
+   : mul
    : equal?
    : zero?
    : north
