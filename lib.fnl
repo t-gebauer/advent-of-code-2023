@@ -93,6 +93,18 @@
   "Least common multiple"
   (* a (/ b (gcd a b))))
 
+(λ table-keys [tbl]
+  (local out [])
+  (each [k _ (pairs tbl)]
+    (table.insert out k))
+  out)
+
+(λ table-values [tbl]
+  (local out [])
+  (each [_ v (pairs tbl)]
+    (table.insert out v))
+  out)
+
 {: map
  : match-numbers
  : read-lines
@@ -108,4 +120,6 @@
  : printv
  : tset-nested
  : gcd
- : lcm}
+ : lcm
+ : table-keys
+ : table-values}
