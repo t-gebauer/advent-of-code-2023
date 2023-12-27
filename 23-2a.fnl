@@ -20,7 +20,7 @@
         goal (V.add grid.size [-1 0])
         nodes {(index start) {}
                (index goal) {}}
-        remaining [[start start 1 (V.add start V.north)]]
+        remaining [[start start 0 (V.add start V.north)]]
         dirs [:north :south :west :east]]
     (while (> (# remaining) 0)
       (local [node pos len prev] (table.remove remaining))
@@ -41,12 +41,35 @@
                 (table.insert remaining [pos path 1 pos]))))
           (do
             (table.insert remaining [node (. paths 1) (+ len 1) pos])))))
-    nodes))
+    {: grid : nodes}))
 
-(λ find-longest-path [nodes]
-  (local longest {})
-  ;; TODO
-  )
+(λ copy-table [tbl]
+  (collect [k v (pairs tbl)]
+    k v))
+
+;; This is not ideal. Takes too long, calculates same paths multiple times,
+;; but it works (in less than a minute).
+(λ find-longest-path [{: grid : nodes}]
+  (local start (index [2 1]))
+  (local goal (index (V.add grid.size [-1 0])))
+  (λ find-longest-path* [current used-nodes]
+    (tset used-nodes current true)
+    (if (= current goal)
+      [used-nodes 0]
+      (do
+        (var longest 0)
+        (var longest-nodes nil)
+        (each [node len (pairs (. nodes current))]
+          (if (not (. used-nodes node))
+            (let [used-nodes (copy-table used-nodes)
+                  [returned-nodes next-len] (find-longest-path* node used-nodes)
+                  path-len (+ len next-len)]
+              (when (and (> path-len longest)
+                         (not= returned-nodes nil))
+                (set longest path-len)
+                (set longest-nodes returned-nodes)))))
+        [longest-nodes longest])))
+  (find-longest-path* start {}))
 
 (->> (read-lines)
      (map chars)
