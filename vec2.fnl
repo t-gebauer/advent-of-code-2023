@@ -10,6 +10,10 @@
   [(* s x)
    (* s y)])
 
+(λ div [[x y] s]
+  [(/ x s)
+   (/ y s)])
+
 (λ equal? [[ax ay] [bx by]]
   (and (= ax bx)
        (= ay by)))
@@ -34,6 +38,7 @@
   {: add
    : sub
    : mul
+   : div
    : equal?
    : zero?
    : north
