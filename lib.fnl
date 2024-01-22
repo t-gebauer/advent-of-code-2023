@@ -93,6 +93,12 @@
   "Least common multiple"
   (* a (/ b (gcd a b))))
 
+(λ sign [x]
+  (if
+    (< x 0) -1
+    (> x 0) 1
+    0))
+
 (λ table-keys [tbl]
   (local out [])
   (each [k _ (pairs tbl)]
@@ -121,5 +127,6 @@
  : tset-nested
  : gcd
  : lcm
+ : sign
  : table-keys
  : table-values}
