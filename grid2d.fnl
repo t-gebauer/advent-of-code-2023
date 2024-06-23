@@ -58,6 +58,11 @@
                            x 1 w]
                (.. line (or (self:get [x y]) ".")))))))
 
+(λ Grid.as-table [self]
+  (fcollect [y 1 self.height]
+    (fcollect [x 1 self.width]
+      (. self.data y x))))
+
 (λ Grid.make [tbl]
   (let [height (# tbl)
         width (# (. tbl 1))

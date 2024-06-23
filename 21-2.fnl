@@ -7,6 +7,7 @@
 (local max (tonumber (. arg 1)))
 
 (λ count-steps [grid]
+  (printv "size" grid.size)
   (var count 0)
   (var max-steps-used 0)
   (var min-north nil)
@@ -19,7 +20,7 @@
     (var current [start 0])
     (while current
       (let [[pos steps] current]
-        (printv max-steps-used steps)
+        ; (printv max-steps-used steps)
         (case (grid:get pos)
           :# nil ; ignore rocks
           nil (do
@@ -40,11 +41,11 @@
           (let [s (sgrid:get pos)]
             (when (and (= false s)
                        (= (% steps 2) (% max 2)))
-              (printv pos)
-
+              ; (printv pos)
               (set count (+ count 1))
-              (set max-steps-used (math.max steps max-steps-used))
-              (grid:set pos :0))
+              (grid:set pos :O))
+            (when (= false s)
+              (set max-steps-used (math.max steps max-steps-used)))
             (when (or (= false s)
                       (< steps s))
               (sgrid:set pos steps)
@@ -54,8 +55,9 @@
                 (table.insert remaining [(V.add pos V.west) (+ steps 1)])
                 (table.insert remaining [(V.add pos V.east) (+ steps 1)]))))))
       (set current (table.remove remaining 1))))
-  (if (< grid.width 12)
-    (grid:print))
+  ; (if (< grid.width 12)
+    ; (grid:print))
+  ; (grid:print)
   (print "max steps" max-steps-used)
   (printv "min" min-north min-south min-west min-east)
   count)
