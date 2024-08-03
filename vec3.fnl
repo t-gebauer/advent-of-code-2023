@@ -42,6 +42,9 @@
                 (^ y 2)
                 (^ z 2))))
 
+(λ norm [v]
+  (div v (len v)))
+
 (λ angle [a b]
   (math.acos
    (/ (dot a b)
@@ -56,4 +59,5 @@
  : zero?
  : equal?
  :length len
+ : norm
  : angle}
